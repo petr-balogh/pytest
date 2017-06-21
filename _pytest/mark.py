@@ -359,8 +359,14 @@ class Mark(namedtuple('Mark', 'name, args, kwargs')):
 
     def combined_with(self, other):
         assert self.name == other.name
+        scope = self.kwargs.get('scope')
+        combined_args = self.args + other.args
+        if scope == 'method':
+            return Mark(
+                self.name, combined_args,
+                dict(other.kwargs, **self.kwargs))
         return Mark(
-            self.name, self.args + other.args,
+            self.name, combined_args,
             dict(self.kwargs, **other.kwargs))
 
 
